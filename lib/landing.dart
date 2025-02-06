@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:poc_webview_payment/scanner.dart';
 import 'package:poc_webview_payment/webview.dart';
 
 class LandingPage extends StatefulWidget {
@@ -49,8 +50,14 @@ class _LandingPageState extends State<LandingPage> {
   }
 
   _onRedirect(String name){
-    if(name == "scanner"){
-
+    if (name == "scanner") {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) {
+            return ScannerPage();
+          },
+        ),
+      );
     }else if(name == "facescan"){
 
     }
