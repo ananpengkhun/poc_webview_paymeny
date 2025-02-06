@@ -17,7 +17,7 @@ import android.graphics.drawable.VectorDrawable
 import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
-import com.example.poc_webview_payment.R
+import com.krungsri.kma.R
 import tech.ainu.facial.liveness.AinuLiveness
 import tech.ainu.facial.liveness.LivenessState
 import tech.ainu.facial.liveness.OnLivenessListener

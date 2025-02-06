@@ -1,7 +1,7 @@
 package com.krungsri.kma.detect_liveness
 
 import tech.ainu.facial.liveness.LivenessState
-import com.example.poc_webview_payment.R
+import com.krungsri.kma.R
 
 
 // object สำหรับจัดการ livenessState

@@ -46,8 +46,8 @@ import androidx.camera.core.resolutionselector.ResolutionStrategy
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
-import com.example.poc_webview_payment.R
-import com.example.poc_webview_payment.databinding.ActivityFacialLivenessScanBinding
+import com.krungsri.kma.R
+import com.krungsri.kma.databinding.ActivityFacialLivenessScanBinding
 import com.krungsri.kma.detect_liveness.StateManager.getMessage
 import com.krungsri.kma.detect_liveness.StateManager.isAction
 import com.krungsri.kma.detect_liveness.StateManager.isWarning

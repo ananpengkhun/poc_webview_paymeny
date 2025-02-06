@@ -1,4 +1,10 @@
+import 'dart:convert';
+import 'dart:developer';
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:poc_webview_payment/liveness.dart';
 import 'package:poc_webview_payment/scanner.dart';
 import 'package:poc_webview_payment/webview.dart';
 
@@ -9,6 +15,7 @@ class LandingPage extends StatefulWidget {
 }
 
 class _LandingPageState extends State<LandingPage> {
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -59,7 +66,13 @@ class _LandingPageState extends State<LandingPage> {
         ),
       );
     }else if(name == "facescan"){
-
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) {
+            return Liveness();
+          },
+        ),
+      );
     }
   }
 }
