@@ -27,6 +27,10 @@ class _LandingPageState extends State<LandingPage> {
                         builder: (context) => WebViewPage(
                               url:
                                   "https://ananpengkhun.github.io/test_post_message/",
+                          channelName: "WebBridge",
+                          onMessageReceived: (aa){
+                                print("callback :${aa.message}");
+                          },
                             )));
               },
               style: TextButton.styleFrom(

@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class WebViewPage extends StatefulWidget {
-  const WebViewPage({super.key, required this.url});
+  const WebViewPage({super.key, required this.channelName, required this.url, required this.onMessageReceived});
+  final String channelName;
   final String url;
+  final Function(JavaScriptMessage) onMessageReceived;
 
   @override
   State<WebViewPage> createState() => _WebViewPageState();
@@ -18,7 +20,8 @@ class _WebViewPageState extends State<WebViewPage> {
      controller = WebViewController()
       ..loadRequest(
         Uri.parse(widget.url),
-      );
+      )
+    ..addJavaScriptChannel(widget.channelName, onMessageReceived: widget.onMessageReceived);
   }
 
   @override
