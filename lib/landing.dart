@@ -5,8 +5,10 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:poc_webview_payment/liveness.dart';
+import 'package:poc_webview_payment/menu_list.dart';
 import 'package:poc_webview_payment/scanner.dart';
 import 'package:poc_webview_payment/webview.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 class LandingPage extends StatefulWidget {
   const LandingPage({super.key});
@@ -32,14 +34,7 @@ class _LandingPageState extends State<LandingPage> {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => WebViewPage(
-                              url:
-                                  "https://ananpengkhun.github.io/test_post_message/",
-                          channelName: "WebBridge",
-                          onMessageReceived: (message){
-                                _onRedirect(message.message);
-                          },
-                            )));
+                        builder: (context) => MenuList()));
               },
               style: TextButton.styleFrom(
                   foregroundColor: Colors.black,
@@ -50,33 +45,11 @@ class _LandingPageState extends State<LandingPage> {
                 style: TextStyle(fontSize: 25),
               ),
             ),
+
+
           ],
         ),
       ),
     );
-  }
-
-  _onRedirect(String name) async {
-    if (name == "scanner") {
-    await Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (context) {
-            return ScannerPage();
-          },
-        ),
-      ).then((value) {
-        if (value != null) {
-
-        }
-      });
-    }else if(name == "facescan"){
-      Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (context) {
-            return Liveness();
-          },
-        ),
-      );
-    }
   }
 }

@@ -1,0 +1,124 @@
+import 'package:flutter/material.dart';
+import 'package:poc_webview_payment/integrate_flutter_widget.dart';
+import 'package:poc_webview_payment/liveness.dart';
+import 'package:poc_webview_payment/scanner.dart';
+import 'package:poc_webview_payment/webview.dart';
+import 'package:webview_flutter/webview_flutter.dart';
+import 'package:webview_flutter_android/webview_flutter_android.dart';
+
+class MenuList extends StatefulWidget {
+  const MenuList({super.key});
+
+  @override
+  State<MenuList> createState() => _MenuListState();
+}
+
+class _MenuListState extends State<MenuList> {
+
+  var baseUrl = "https://ananpengkhun.github.io/test_post_message/";
+
+  var scanQrcontroller = WebViewController();
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        title: const Text(""),
+      ),
+      body: SizedBox.expand(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            TextButton(onPressed: (){
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => WebViewPage(
+                        controller: scanQrcontroller,
+                        url: baseUrl,
+                        channelName: "WebBridge",
+                        onMessageReceived: (message){
+                          _onRedirect(message.message);
+                        },
+                      )));
+            }, child: Text("Scan Qr")),
+
+            TextButton(onPressed: (){
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => WebViewPage(
+                        controller: scanQrcontroller,
+                        url: baseUrl,
+                        channelName: "WebBridge",
+                        onMessageReceived: (message){
+                          _onRedirect(message.message);
+                        },
+                      )));
+            }, child: Text("Liveness")),
+
+            TextButton(onPressed: (){
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => WebViewPage(
+                        controller: WebViewController(),
+                        url: "https://en.wikipedia.org/wiki/Main_Page",
+                        channelName: "WebBridge",
+                        onMessageReceived: (message){
+                        },
+                      )));
+            }, child: Text("Navigation Stack")),
+
+            TextButton(onPressed: (){
+              var controller = WebViewController();
+              controller.loadRequest(Uri.parse("https://en.wikipedia.org/wiki/Main_Page"));
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => WebViewWidget.fromPlatformCreationParams(
+                        params: AndroidWebViewWidgetCreationParams(
+                          controller: controller.platform,
+                          displayWithHybridComposition: true,
+                        ),
+                      )));
+            }, child: Text("Scroll Issue")),
+
+            TextButton(onPressed: (){
+              var controller = WebViewController();
+              controller.loadRequest(Uri.parse("https://en.wikipedia.org/wiki/Main_Page"));
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => IntegrateFlutterWidget()));
+            }, child: Text("Integrate with flutter widget")),
+          ],
+        ),
+      ),
+    );
+  }
+
+  _onRedirect(String name)async{
+    if (name == "scanner") {
+      await Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) {
+            return ScannerPage();
+          },
+        ),
+      );
+      scanQrcontroller.loadRequest(Uri.parse("$baseUrl?asdasd"));
+    }else if(name == "facescan"){
+
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) {
+            return Liveness();
+          },
+        ),
+      );
+    }
+  }
+
+}
