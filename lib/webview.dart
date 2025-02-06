@@ -17,11 +17,12 @@ class _WebViewPageState extends State<WebViewPage> {
   @override
   void initState() {
     super.initState();
-     controller = WebViewController()
-      ..loadRequest(
-        Uri.parse(widget.url),
-      )
-    ..addJavaScriptChannel(widget.channelName, onMessageReceived: widget.onMessageReceived);
+    controller = WebViewController();
+    controller.setJavaScriptMode(JavaScriptMode.unrestricted);
+    controller.addJavaScriptChannel(widget.channelName, onMessageReceived: widget.onMessageReceived);
+
+    controller.loadRequest(Uri.parse(widget.url));
+
   }
 
   @override

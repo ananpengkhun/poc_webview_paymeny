@@ -28,8 +28,8 @@ class _LandingPageState extends State<LandingPage> {
                               url:
                                   "https://ananpengkhun.github.io/test_post_message/",
                           channelName: "WebBridge",
-                          onMessageReceived: (aa){
-                                print("callback :${aa.message}");
+                          onMessageReceived: (message){
+                                _onRedirect(message.message);
                           },
                             )));
               },
@@ -46,5 +46,13 @@ class _LandingPageState extends State<LandingPage> {
         ),
       ),
     );
+  }
+
+  _onRedirect(String name){
+    if(name == "scanner"){
+
+    }else if(name == "facescan"){
+
+    }
   }
 }
