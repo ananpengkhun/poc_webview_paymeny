@@ -49,15 +49,19 @@ class _LandingPageState extends State<LandingPage> {
     );
   }
 
-  _onRedirect(String name){
+  _onRedirect(String name) async {
     if (name == "scanner") {
-      Navigator.of(context).push(
+    await Navigator.of(context).push(
         MaterialPageRoute(
           builder: (context) {
             return ScannerPage();
           },
         ),
-      );
+      ).then((value) {
+        if (value != null) {
+
+        }
+      });
     }else if(name == "facescan"){
 
     }

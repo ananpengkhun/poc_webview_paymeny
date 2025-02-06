@@ -39,6 +39,7 @@ class _ScannerPageState extends State<ScannerPage> {
                   final List<Barcode> barcodes = capture.barcodes;
                   for (final barcode in barcodes) {
                     debugPrint('QR Found! ${barcode.rawValue}');
+                    Navigator.of(context).pop(barcode.rawValue);
                   }
                   controller.stop();
                 },
