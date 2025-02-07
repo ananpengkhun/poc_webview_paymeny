@@ -6,6 +6,8 @@ import 'package:poc_webview_payment/webview.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:webview_flutter_android/webview_flutter_android.dart';
 
+import 'issue_webview_scrollview.dart';
+
 class MenuList extends StatefulWidget {
   const MenuList({super.key});
 
@@ -94,6 +96,15 @@ class _MenuListState extends State<MenuList> {
                   MaterialPageRoute(
                       builder: (context) => IntegrateFlutterWidget()));
             }, child: Text("Integrate with flutter widget")),
+
+            TextButton(onPressed: (){
+              var controller = WebViewController();
+              controller.loadRequest(Uri.parse("https://en.wikipedia.org/wiki/Main_Page"));
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => IssueWebviewScrollView()));
+            }, child: Text("Issue Webview Height")),
           ],
         ),
       ),
