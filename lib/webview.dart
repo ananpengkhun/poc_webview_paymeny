@@ -31,7 +31,7 @@ class _WebViewPageState extends State<WebViewPage> {
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-          title: const Text(""),
+          title: const Text("WebView"),
         ),
         body: WebViewWidget(
 

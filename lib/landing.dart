@@ -23,7 +23,7 @@ class _LandingPageState extends State<LandingPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: const Text(""),
+        title: const Text("หน้าหลัก"),
       ),
       body: Center(
         child: Column(

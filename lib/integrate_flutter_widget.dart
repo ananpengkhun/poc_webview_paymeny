@@ -26,8 +26,8 @@ class _IntegrateFlutterWidgetState extends State<IntegrateFlutterWidget> {
       body: Column(children: [
         Container(
           color: Colors.green,
-          child: Text("flutter component"),
-          padding: EdgeInsets.only(top: 20, bottom: 20),),
+          child: Text("Flutter Component"),
+          padding: EdgeInsets.all(20),),
         Expanded(
           child: WebViewWidget(
             controller: controller,
@@ -35,8 +35,8 @@ class _IntegrateFlutterWidgetState extends State<IntegrateFlutterWidget> {
         ),
         Container(
           color: Colors.grey,
-            child: Text("flutter component"),
-          padding: EdgeInsets.only(top: 20, bottom: 20),)
+            child: Text("Flutter Component"),
+          padding: EdgeInsets.all(20),)
       ],),
     );
   }

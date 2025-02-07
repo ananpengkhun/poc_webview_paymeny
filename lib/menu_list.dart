@@ -23,7 +23,7 @@ class _MenuListState extends State<MenuList> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: const Text(""),
+        title: const Text("รายการ"),
       ),
       body: SizedBox.expand(
         child: Column(
@@ -59,15 +59,16 @@ class _MenuListState extends State<MenuList> {
             }, child: Text("Liveness")),
 
             TextButton(onPressed: (){
+              var controller = WebViewController();
+              controller.loadRequest(Uri.parse("https://en.wikipedia.org/wiki/Main_Page"));
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => WebViewPage(
-                        controller: WebViewController(),
-                        url: "https://en.wikipedia.org/wiki/Main_Page",
-                        channelName: "WebBridge",
-                        onMessageReceived: (message){
-                        },
+                      builder: (context) => WebViewWidget.fromPlatformCreationParams(
+                        params: AndroidWebViewWidgetCreationParams(
+                          controller: controller.platform,
+                          displayWithHybridComposition: true,
+                        ),
                       )));
             }, child: Text("Navigation Stack")),
 
@@ -101,14 +102,22 @@ class _MenuListState extends State<MenuList> {
 
   _onRedirect(String name)async{
     if (name == "scanner") {
-      await Navigator.of(context).push(
+      var result = await Navigator.of(context).push(
         MaterialPageRoute(
           builder: (context) {
             return ScannerPage();
           },
         ),
       );
-      scanQrcontroller.loadRequest(Uri.parse("$baseUrl?asdasd"));
+
+      if(result != ""){
+        showProgress(context);
+        await Future.delayed(Duration(seconds: 2));
+        await hideProgress();
+
+        scanQrcontroller.loadRequest(Uri.parse("$baseUrl?isFace=false&data=Update your info..."));
+      }
+
     }else if(name == "facescan"){
 
       Navigator.of(context).push(
@@ -121,4 +130,37 @@ class _MenuListState extends State<MenuList> {
     }
   }
 
+
+
 }
+
+
+showProgress(BuildContext context) async {
+  await showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (mContext) {
+        return WillPopScope(
+          onWillPop: () async => false,
+          child: Center(
+            key: progressDialog,
+            child: const SizedBox(
+              width: 20,
+              height: 20,
+              child: CircularProgressIndicator(
+                strokeWidth: 3,
+                color: Colors.green,
+              ),
+            ),
+          ),
+        );
+      });
+}
+
+hideProgress() async {
+  await Future.delayed(const Duration(milliseconds: 300)).then((value) {
+    Navigator.pop(progressDialog.currentContext!);
+  });
+}
+
+final GlobalKey progressDialog = GlobalKey<NavigatorState>();
