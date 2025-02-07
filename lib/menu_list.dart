@@ -145,7 +145,7 @@ class _MenuListState extends State<MenuList> {
         await hideProgress();
         result.then((value) {
           print("result :: $value");
-          scanQrcontroller.loadRequest(Uri.parse("$baseUrl?isFace=false&data=$value"));
+          scanQrcontroller.loadRequest(Uri.parse("$baseUrl?isFace=true&data=$value"));
         });
       }
     }
