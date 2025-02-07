@@ -61,6 +61,19 @@ android {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig signingConfigs.debug
+            ext.set("ainu.secretKey", "X7pNrmAqctUe9VdevGCwE8zxe5tVs6hm")
+            ext.set("ainu.env", "uat")
+            ext.set("ainu.hashedID", "true")
+            ext.set("ainu.aarFiles", "$projectDir/../libs/AinuLiveness.aar")
+        }
+
+        debug {
+            debuggable true
+            signingConfig signingConfigs.debug
+            ext.set("ainu.secretKey", "X7pNrmAqctUe9VdevGCwE8zxe5tVs6hm")
+            ext.set("ainu.env", "uat")
+            ext.set("ainu.hashedID", "true")
+            ext.set("ainu.aarFiles", "$projectDir/../libs/AinuLiveness.aar")
         }
     }
 }

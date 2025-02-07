@@ -183,7 +183,7 @@ internal open class AinuLivenessActivity : AppCompatActivity() {
             super.onChange(selfChange)
             val accessibilityServiceEnabled: Boolean = getEnabledAccessibilityServiceList().size > 0
             if(accessibilityServiceEnabled){
-                rejectAccessibilty()
+//                rejectAccessibilty()
             }
 
         }
@@ -597,7 +597,7 @@ internal open class AinuLivenessActivity : AppCompatActivity() {
         if (hasFocus) initialFrameCameraUI()
 
         if(getEnabledAccessibilityServiceList().size > 0){
-            rejectAccessibilty()
+//            rejectAccessibilty()
         }
     }
 
@@ -606,15 +606,15 @@ internal open class AinuLivenessActivity : AppCompatActivity() {
         finish()
     }
 
-    fun rejectAccessibilty(){
-        setResult(999)
-        finish()
-    }
+//    fun rejectAccessibilty(){
+//        setResult(999)
+//        finish()
+//    }
 
-    fun rejectOverlay(){
-        setResult(888)
-        finish()
-    }
+//    fun rejectOverlay(){
+//        setResult(888)
+//        finish()
+//    }
 
     private fun getEnabledAccessibilityServiceList(): ArrayList<String> {
         val accessibilityManager = applicationContext?.getSystemService(Context.ACCESSIBILITY_SERVICE) as AccessibilityManager
@@ -667,7 +667,7 @@ internal open class AinuLivenessActivity : AppCompatActivity() {
             if(!isBreakerOverlay && ev != null && !isDeviceInWhiteList){
                 val theBadTouch = ev.flags and MotionEvent.FLAG_WINDOW_IS_PARTIALLY_OBSCURED != 0 || ev.flags and MotionEvent.FLAG_WINDOW_IS_OBSCURED != 0
                 if (theBadTouch){
-                    rejectOverlay()
+//                    rejectOverlay()
 //                    mc.invokeMethod("overlayAndroidActionMethod",null)
                 }
             }

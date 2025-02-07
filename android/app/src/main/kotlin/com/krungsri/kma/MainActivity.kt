@@ -174,7 +174,7 @@ class MainActivity: FlutterFragmentActivity() {
 
             when (call.method) {
                 EXECUTE_AINU_LIVELINESS -> {
-                    startAinuLiveness(3, isEn)
+                    startAinuLiveness(0, isEn)
                 }
                 EXECUTE_AINU_LIVELINESS_PASSIVE -> {
                     startAinuLiveness(0, isEn)
