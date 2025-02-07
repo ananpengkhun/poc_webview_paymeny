@@ -34,7 +34,7 @@ class _LivenessState extends State<Liveness> {
     // Start the camera and liveness
     try {
       await _methodChannel.invokeMapMethod<String, dynamic>(
-          'executeAinuLiveness', {"isEn" : "isEn"}
+          'executeAinuLiveness', {"isEn" : false}
       );
     } on PlatformException catch (error) {
       isStarting = false;
