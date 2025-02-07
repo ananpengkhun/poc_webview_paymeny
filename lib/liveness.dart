@@ -15,6 +15,12 @@ class Liveness extends StatefulWidget {
 
 class _LivenessState extends State<Liveness> {
 
+  @override
+  void initState() {
+    start();
+    super.initState();
+  }
+
   _LivenessState() {
     _methodChannel.setMethodCallHandler(_handleMethodCall);
   }
@@ -53,10 +59,13 @@ class _LivenessState extends State<Liveness> {
         final metadata = call.arguments['metadata'] as String;
         final dataLog = call.arguments['log'] as String;
 
+        Navigator.of(context).pop(imageBase64);
+
         setState(() {
           _imageData = Uint8List.fromList(imageByte);
           status = resultCode;
         });
+
         print("status ===> $status");
         print("imageByte ===> $imageByte");
         print("imageBase64 ===> $imageBase64");
@@ -98,24 +107,25 @@ class _LivenessState extends State<Liveness> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(status),
-            _imageData != null
-                ? Image.memory(_imageData!)
-                : CircularProgressIndicator(),
-            ElevatedButton(
-              onPressed: () {
-                start();
-              },
-              child: Text('Start Liveness'),
-            ),
-          ],
-        ),
-      ),
-    );
+    return Container();
+    // return Scaffold(
+    //   body: Center(
+    //     child: Column(
+    //       mainAxisAlignment: MainAxisAlignment.center,
+    //       children: <Widget>[
+    //         Text(status),
+    //         _imageData != null
+    //             ? Image.memory(_imageData!)
+    //             : CircularProgressIndicator(),
+    //         ElevatedButton(
+    //           onPressed: () {
+    //             start();
+    //           },
+    //           child: Text('Start Liveness'),
+    //         ),
+    //       ],
+    //     ),
+    //   ),
+    // );
   }
 }

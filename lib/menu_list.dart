@@ -131,13 +131,23 @@ class _MenuListState extends State<MenuList> {
 
     }else if(name == "facescan"){
 
-      Navigator.of(context).push(
+      var result = Navigator.of(context).push(
         MaterialPageRoute(
           builder: (context) {
             return Liveness();
           },
         ),
       );
+
+      if(result != ""){
+        showProgress(context);
+        await Future.delayed(Duration(seconds: 2));
+        await hideProgress();
+        result.then((value) {
+          print("result :: $value");
+          scanQrcontroller.loadRequest(Uri.parse("$baseUrl?isFace=false&data=$value"));
+        });
+      }
     }
   }
 
