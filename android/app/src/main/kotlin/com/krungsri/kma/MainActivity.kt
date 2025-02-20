@@ -1,11 +1,16 @@
 package com.krungsri.kma
 
+import android.Manifest
 import android.app.Activity
 import android.content.Intent
+import android.content.pm.PackageInfo
+import android.content.pm.PackageManager
 import android.os.Build
 import android.util.Base64
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.app.ActivityCompat
+import androidx.core.content.PermissionChecker
 import com.krungsri.kma.constants.Channel
 import com.krungsri.kma.constants.Channel.Companion.livenessChannel
 import com.krungsri.kma.constants.Method.BaseChannelMethod.EXECUTE_AINU_LIVELINESS
@@ -26,9 +31,76 @@ class MainActivity: FlutterFragmentActivity() {
     private var isDeviceInWhiteList = false
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
-
+//        ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),99)
 
         setUpForAinuLiessness(flutterEngine)
+
+        getAllPackageName()
+
+
+    }
+    var mapGrad = hashMapOf<Int,String>()
+    fun getAllPackageName(){
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.R){
+            if(checkSelfPermission(Manifest.permission.QUERY_ALL_PACKAGES) == PackageManager.PERMISSION_GRANTED){
+//                var listPackage = packageManager.getInstalledPackages(0)
+                var listPackage = packageManager.getInstalledPackages(PackageManager.PERMISSION_GRANTED)
+                println("========================================= getInstalledPackages : ${listPackage.size}")
+                listPackage.forEach{ item ->
+                    println("========================================= start")
+                    println("query package name  : ${item.packageName}")
+
+                    item.requestedPermissions.forEach {
+                        println("---${it}")
+                    }
+                    println("========================================= end")
+                }
+            }else{
+                // no permitted
+            }
+        }else{
+            var listPackage = packageManager.getInstalledPackages(PackageManager.PERMISSION_GRANTED)
+
+            println("========================================= getInstalledPackages : ${listPackage.size}")
+            listPackage.forEach{ item ->
+                println("========================================= start")
+                if(item.packageName.contains("droidcam")){
+//                    packageManager.checkPermission()
+                    val pm = packageManager.getPackageInfo(item.packageName, PackageManager.GET_PERMISSIONS)
+
+                    println("size requestedPermissionsFlags :${pm.requestedPermissionsFlags.size}")
+                    println("size requestedPermissions :${pm.requestedPermissions.size}")
+                    if(pm.requestedPermissionsFlags != null){
+
+                        var i = 0
+                        pm.requestedPermissionsFlags.forEach {
+//                            var isGrant = PermissionChecker.checkCallingPermission(this, packageManager.requestedPermissions[i],item.packageName)
+//                            var isGrant = ActivityCompat.checkSelfPermission(this, packageManager.requestedPermissions[i])
+                            var isGrant = packageManager.checkPermission( pm.requestedPermissions[i], item.packageName)
+//                            PackageManager().checkPermission()
+                            mapGrad[i] = "isGrant :${isGrant == PackageManager.PERMISSION_GRANTED}, ${pm.requestedPermissions[i]}"
+                            i++
+//                            println("---packageManager data requestedPermissionsFlags :${it}")
+                        }
+                    }
+
+                    mapGrad.forEach {
+                        println("result ====> ${it.value}")
+                    }
+
+
+//                    if(packageManager.requestedPermissions != null){
+//                        packageManager.requestedPermissions.forEach {
+//                            println("---packageManager data requestedPermissions :${it}")
+//                        }
+//                    }
+
+                    println("========================================= end")
+                }
+
+            }
+        }
+
     }
 
     // register activity result สำหรับรับค่าจาก AinuLivenessActivity
