@@ -2,15 +2,21 @@ package com.krungsri.kma
 
 import android.Manifest
 import android.app.Activity
+import android.app.AppOpsManager
+import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
+import android.hardware.camera2.CameraCharacteristics
+import android.hardware.camera2.CameraManager
+import android.hardware.camera2.CaptureRequest
+import android.location.Location
+import android.location.LocationManager
 import android.os.Build
+import android.provider.Settings
 import android.util.Base64
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
-import androidx.core.content.PermissionChecker
 import com.krungsri.kma.constants.Channel
 import com.krungsri.kma.constants.Channel.Companion.livenessChannel
 import com.krungsri.kma.constants.Method.BaseChannelMethod.EXECUTE_AINU_LIVELINESS
@@ -29,16 +35,146 @@ import tech.ainu.facial.liveness.ResultCode
 class MainActivity: FlutterFragmentActivity() {
     private var isBreakerOverlay = false
     private var isDeviceInWhiteList = false
+    var isFirst = false
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
-//        ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),99)
+        ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION),99)
 
         setUpForAinuLiessness(flutterEngine)
 
         getAllPackageName()
 
+        virtualCam()
+
+        detectMock()
+    }
+
+    fun detectMock(){
+        var isMockLocation = false
+        val locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
+
+        try {
+
+            val location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+
+            if (location != null) {
+                // Detect if the location is mock
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                    isMockLocation = location.isMock
+                }else{
+//                    location
+//                    Settings.Secure.getString(contentResolver,
+//                        Settings.Secure.ALLOW_MOCK_LOCATION).equals("0")
+
+//                    isMockLocation = location.isFromMockProvider
+//                    isMockLocation = location.isFromMockProvider
+                }
+
+                io.flutter.Log.i("isMockLocation", "data ;;;;;$isMockLocation")
+            }
+        } catch (e: SecurityException) {
+            isMockLocation = false
+        }
+
+        io.flutter.Log()
+
 
     }
+
+    override fun onStart() {
+        super.onStart()
+    }
+
+
+    fun virtualCam(){
+        if(isFirst) return
+        isFirst = true
+
+        val cameraMG = getSystemService(Context.CAMERA_SERVICE) as CameraManager
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.CAMERA
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            return
+        }
+
+        cameraMG.cameraIdList.forEach {cameraId ->
+//            try {
+//
+//
+//                cameraMG.openCamera(cameraId, calll,null)
+//
+//            } catch (e : Exception){
+//                println("cameraIdList exception:${e}")
+//            }
+
+
+            val characteristics = cameraMG.getCameraCharacteristics(cameraId)
+            println("cameraIdList physicalCameraIds:${characteristics.physicalCameraIds.map { t -> t }}")
+
+            val availableAfModes = characteristics.get(CameraCharacteristics.CONTROL_AF_AVAILABLE_MODES)
+
+            CaptureRequest.CONTROL_AE_MODE
+            availableAfModes?.forEach {
+                println("cameraIdList availableAfModes:${it}")
+            }
+
+
+            val streamConfigurationMap = characteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP)
+            if (streamConfigurationMap != null) {
+                val outputSizes = streamConfigurationMap.getOutputSizes(android.graphics.ImageFormat.JPEG)
+                outputSizes.forEach {
+                    println("cameraIdList outputSizes:${it.width}x${it.height}")
+                }
+
+
+//                for (size in outputSizes) {
+//                    Log.d(TAG, "  - ${size.width}x${size.height}")
+//                }
+            }
+
+
+
+//            CameraCharacteristics.LENS_INFO_MINIMUM_FOCUS_DISTANCE
+//            CameraCharacteristics.LENS_INFO_SHADING_MAP_SIZE
+
+            var source = characteristics.get(CameraCharacteristics.SENSOR_INFO_TIMESTAMP_SOURCE)
+            var source222 = characteristics.get(CameraCharacteristics.SENSOR_INFO_SENSITIVITY_RANGE)
+            println("cameraIdList available:${source}//${source222}")
+
+
+            characteristics.availableSessionKeys.forEach {
+                println("cameraIdList available:${it.name}")
+            }
+
+
+            var cameraName = characteristics.get(CameraCharacteristics.INFO_SUPPORTED_HARDWARE_LEVEL).toString()
+            println("cameraIdList :${cameraName}")
+//            isVirtualCam()
+            var lenFront = characteristics.get(CameraCharacteristics.LENS_FACING).toString()
+            println("cameraIdList 2:${lenFront}")
+
+            var phypixelArray = characteristics.get(CameraCharacteristics.SENSOR_INFO_PHYSICAL_SIZE)
+            println("cameraIdList PhypixelArray:${phypixelArray}")
+
+            var pixelArray = characteristics.get(CameraCharacteristics.SENSOR_INFO_PIXEL_ARRAY_SIZE)
+            println("cameraIdList pixelArray:${pixelArray}")
+
+            var hotPixelArray = characteristics.get(CameraCharacteristics.HOT_PIXEL_AVAILABLE_HOT_PIXEL_MODES)
+            println("cameraIdList hotPixelArray:${hotPixelArray?.map { r -> r }}")
+//            CameraCharacteristics.SENSOR_INFO_PIXEL_ARRAY_SIZE_MAXIMUM_RESOLUTION
+
+            var infohotPixelArray = characteristics.get(CameraCharacteristics.STATISTICS_INFO_AVAILABLE_HOT_PIXEL_MAP_MODES)
+            println("cameraIdList infohotPixelArray:${infohotPixelArray?.map { r -> r }}")
+
+
+
+
+        }
+
+    }
+
     var mapGrad = hashMapOf<Int,String>()
     fun getAllPackageName(){
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.R){
@@ -64,12 +200,17 @@ class MainActivity: FlutterFragmentActivity() {
             println("========================================= getInstalledPackages : ${listPackage.size}")
             listPackage.forEach{ item ->
                 println("========================================= start")
-                if(item.packageName.contains("droidcam")){
-//                    packageManager.checkPermission()
-                    val pm = packageManager.getPackageInfo(item.packageName, PackageManager.GET_PERMISSIONS)
+                val pm = packageManager.getPackageInfo(item.packageName, PackageManager.GET_PERMISSIONS)
+                var installer = packageManager.getInstallerPackageName(item.packageName)
 
-                    println("size requestedPermissionsFlags :${pm.requestedPermissionsFlags.size}")
-                    println("size requestedPermissions :${pm.requestedPermissions.size}")
+                var info = pm.applicationInfo.sourceDir.startsWith("/data/app/")
+                println("result ====> packageName installerInfo: ${installer}")
+                println("result ====> packageName : ${item.packageName}, isSystem : ${!info}")
+
+
+                if(item.packageName.contains("com.krungsri.kma")){
+//                    packageManager.checkPermission()
+
                     if(pm.requestedPermissionsFlags != null){
 
                         var i = 0
@@ -77,6 +218,7 @@ class MainActivity: FlutterFragmentActivity() {
 //                            var isGrant = PermissionChecker.checkCallingPermission(this, packageManager.requestedPermissions[i],item.packageName)
 //                            var isGrant = ActivityCompat.checkSelfPermission(this, packageManager.requestedPermissions[i])
                             var isGrant = packageManager.checkPermission( pm.requestedPermissions[i], item.packageName)
+
 //                            PackageManager().checkPermission()
                             mapGrad[i] = "isGrant :${isGrant == PackageManager.PERMISSION_GRANTED}, ${pm.requestedPermissions[i]}"
                             i++

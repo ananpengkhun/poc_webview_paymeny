@@ -2,8 +2,10 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:typed_data';
 
+import 'package:args/args.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:poc_webview_payment/liveness.dart';
 import 'package:poc_webview_payment/menu_list.dart';
 import 'package:poc_webview_payment/scanner.dart';
@@ -19,6 +21,24 @@ class LandingPage extends StatefulWidget {
 class _LandingPageState extends State<LandingPage> {
 
   @override
+  void initState() {
+    var arg = ArgParser();
+    var command = ArgParser();
+    arg.addCommand('commit', command);
+
+
+
+
+
+    super.initState();
+  }
+
+  checkMock()async{
+    var aa = await Geolocator.getCurrentPosition();
+    print("checkMock() ===> ${aa.isMocked}");
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -31,6 +51,9 @@ class _LandingPageState extends State<LandingPage> {
           children: <Widget>[
             TextButton(
               onPressed: () {
+
+                checkMock();
+                return;
                 Navigator.push(
                     context,
                     MaterialPageRoute(
