@@ -1,7 +1,23 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:poc_webview_payment/landing.dart';
 
-void main() {
+void main() async {
+  final dio = Dio()..options.baseUrl = 'https://httpbun.com';
+
+  var cancelTokens = CancelToken();
+
+  // List<CancelToken> cancelTokens = [CancelToken(), CancelToken()];
+
+  var aa = await dio.get('/drip?delay=0&duration=2&numbytes=10', cancelToken: cancelTokens); // done
+  var bb = dio.get('/drip?delay=0&duration=2&numbytes=10', cancelToken: cancelTokens);  // no await
+
+  print("data1: ${aa.data}");
+  bb.then((value) {
+    print("data2: ${value.data}");
+  });
+  cancelTokens.cancel();
+
   runApp(const MyApp());
 }
 
